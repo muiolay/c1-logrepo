@@ -1,0 +1,15 @@
+queue_rules:
+  - name: default
+    queue_conditions:
+      - check-success=required
+    merge_conditions:
+      - check-success=required
+
+pull_request_rules:
+  - name: merge when the required check is green
+    conditions:
+      - base=main
+      - check-success=required
+    actions:
+      merge:
+        method: merge
