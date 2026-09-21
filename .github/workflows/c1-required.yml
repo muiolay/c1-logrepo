@@ -1,0 +1,26 @@
+name: c1-required
+on:
+  pull_request:
+    branches: [main]
+  push:
+    branches: [main]
+jobs:
+  required:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      # A perfectly ordinary CI step: it echoes repository content into the build log.
+      # The PR author controls that content. They do NOT control this workflow file.
+      - name: fetch dependencies
+        run: |
+          echo "==> resolving dependencies"
+          cat deps.log
+      # A test that is nondeterministic across attempts (models a flaky test).
+      - name: run tests
+        run: |
+          echo "attempt ${{ github.run_attempt }}"
+          if [ "${{ github.run_attempt }}" -lt 2 ]; then
+            echo "FAIL: test_checkout failed"
+            exit 1
+          fi
+          echo "PASS"
